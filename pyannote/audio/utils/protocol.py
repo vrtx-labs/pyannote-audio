@@ -93,7 +93,7 @@ def check_protocol(protocol: Protocol) -> Protocol:
 
         # use soundfile when available (it usually is faster than ffmpeg for getting info)
         backends = (
-            torchaudio.list_audio_backends()
+            getattr(torchaudio, "list_audio_backends", lambda: ["ffmpeg"])()
         )  # e.g ['ffmpeg', 'soundfile', 'sox']
         backend = "soundfile" if "soundfile" in backends else backends[0]
         protocol.preprocessors["torchaudio.info"] = partial(

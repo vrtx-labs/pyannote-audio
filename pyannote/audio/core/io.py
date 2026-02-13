@@ -57,7 +57,7 @@ integer to load a specific channel: {"audio": "stereo.wav", "channel": 0}
 
 def get_torchaudio_info(
     file: AudioFile, backend: str = None
-) -> torchaudio.AudioMetaData:
+) -> object:
     """Protocol preprocessor used to cache output of torchaudio.info
 
     This is useful to speed future random access to this file, e.g.
@@ -78,7 +78,7 @@ def get_torchaudio_info(
 
     if not backend:
         backends = (
-            torchaudio.list_audio_backends()
+            getattr(torchaudio, "list_audio_backends", lambda: ["ffmpeg"])()
         )  # e.g ['ffmpeg', 'soundfile', 'sox']
         backend = "soundfile" if "soundfile" in backends else backends[0]
 
@@ -209,7 +209,7 @@ class Audio:
 
         if not backend:
             backends = (
-                torchaudio.list_audio_backends()
+                getattr(torchaudio, "list_audio_backends", lambda: ["ffmpeg"])()
             )  # e.g ['ffmpeg', 'soundfile', 'sox']
             backend = "soundfile" if "soundfile" in backends else backends[0]
 

@@ -23,6 +23,7 @@
 import itertools
 import math
 import random
+from dataclasses import dataclass
 from typing import Dict, Sequence, Union
 
 import matplotlib.pyplot as plt
@@ -31,9 +32,19 @@ import torch
 from pyannote.database.protocol.protocol import Scope, Subset
 from pytorch_lightning.loggers import MLFlowLogger, TensorBoardLogger
 from torch.utils.data._utils.collate import default_collate
-from torchaudio import AudioMetaData
 from torchmetrics import Metric
 from torchmetrics.classification import BinaryAUROC, MulticlassAUROC, MultilabelAUROC
+
+
+@dataclass
+class _AudioMetaData:
+    """Compatibility shim for torchaudio.AudioMetaData (removed in torchaudio 2.8+)"""
+
+    sample_rate: int = 0
+    num_frames: int = 0
+    num_channels: int = 0
+    bits_per_sample: int = 0
+    encoding: str = ""
 
 from pyannote.audio.core.task import Problem, Task, get_dtype
 from pyannote.audio.utils.random import create_rng_for_worker
@@ -57,7 +68,7 @@ class SegmentationTask(Task):
         num_frames = _audio_info["num_frames"]
         num_channels = _audio_info["num_channels"]
         bits_per_sample = _audio_info["bits_per_sample"]
-        file["torchaudio.info"] = AudioMetaData(
+        file["torchaudio.info"] = _AudioMetaData(
             sample_rate=sample_rate,
             num_frames=num_frames,
             num_channels=num_channels,

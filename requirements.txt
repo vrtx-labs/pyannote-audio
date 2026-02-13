@@ -15,5 +15,5 @@ speechbrain >= 1.0.0
 tensorboardX >= 2.6
 torch >= 2.0.0
 torch_audiomentations >= 0.11.0
-torchaudio >= 2.2.0
+torchaudio >= 2.2.0  # Patched for 2.8+ compat (AudioMetaData, list_audio_backends removed)
 torchmetrics >= 0.11.0
